@@ -12,7 +12,6 @@ export async function getServices(searchParams: string) {
 
     const precioMin = params.get("precioMin");
     const precioMax = params.get("precioMax");
-    console.log(precioMin, precioMax);
 
     const where = {
       categoryId: {

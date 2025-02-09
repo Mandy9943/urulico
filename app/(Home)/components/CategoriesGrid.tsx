@@ -13,7 +13,7 @@ export default function CategoriesGrid({
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {categories.map((category) => (
             <Link
-              href={`/categoria?categoria=${category.slug}`}
+              href={`/categoria/${category.slug}`}
               key={category.slug}
               className="group p-4 bg-gray-900/50 rounded-lg border border-gray-800 hover:border-violet-500 transition-all"
             >

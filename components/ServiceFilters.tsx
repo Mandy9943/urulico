@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 // Constants
@@ -43,6 +43,7 @@ const ciudades = {
 export default function ServiceFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const categoria = useParams().slug;
   const currentDepartamento = searchParams.get("departamento") || "";
 
   // Obtener las ciudades del departamento seleccionado
@@ -57,11 +58,8 @@ export default function ServiceFilters() {
       const formData = new FormData(e.currentTarget);
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
-      // Mantener el parámetro categoria
-      const categoria = searchParams.get("categoria");
-      if (categoria) {
-        newSearchParams.set("categoria", categoria);
-      }
+      // Remover categoria de los searchParams ya que está en la URL
+      newSearchParams.delete("categoria");
 
       formData.forEach((value, key) => {
         if (value && value !== "todos" && value !== "todas") {
@@ -71,14 +69,17 @@ export default function ServiceFilters() {
         }
       });
 
-      router.push(`/categoria?${newSearchParams.toString()}`);
+      router.push(`/categoria/${categoria}?${newSearchParams.toString()}`);
     },
-    [router, searchParams]
+    [router, searchParams, categoria]
   );
 
   // Manejar cambio de departamento
   const handleDepartamentoChange = (value: string) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
+
+    // Remover categoria de los searchParams ya que está en la URL
+    newSearchParams.delete("categoria");
 
     if (value && value !== "todos") {
       newSearchParams.set("departamento", value);
@@ -89,7 +90,7 @@ export default function ServiceFilters() {
     // Limpiar ciudad cuando cambia el departamento
     newSearchParams.delete("ciudad");
 
-    router.push(`/categoria?${newSearchParams.toString()}`);
+    router.push(`/categoria/${categoria}?${newSearchParams.toString()}`);
   };
 
   return (

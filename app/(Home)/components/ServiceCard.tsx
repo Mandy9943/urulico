@@ -12,7 +12,7 @@ interface ServiceCardProps {
   id: string;
   titulo: string;
   descripcion: string | null;
-  precio: string | null;
+  precio: number | null;
   moneda: string | null;
   departamento: string | null;
   ciudad: string | null;

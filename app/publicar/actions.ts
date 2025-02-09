@@ -39,11 +39,14 @@ export async function createService(
       ? "email"
       : validatedFields.contactoPor || "email";
 
+    // Destructure categoria and create a data object without it
+    const { categoria, ...serviceData } = validatedFields;
+
     // For now, we'll use a hardcoded userId since we don't have auth yet
 
     const service = await prisma.service.create({
       data: {
-        ...validatedFields,
+        ...serviceData,
         contactoPor,
         imagenes: imageUrls,
         user: {
@@ -58,11 +61,12 @@ export async function createService(
         },
         category: {
           connect: {
-            slug: validatedFields.categoria,
+            slug: categoria,
           },
         },
       },
     });
+    console.log(service);
 
     return { success: true, data: service };
   } catch (error) {

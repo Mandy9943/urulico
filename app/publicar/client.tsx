@@ -122,7 +122,13 @@ const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
       }
 
       // Then create service
-      const result = await createService(values, imageUrls);
+      const result = await createService(
+        {
+          ...values,
+          precio: values.precio ? Number(values.precio) : undefined,
+        },
+        imageUrls
+      );
 
       if (result.success) {
         // Redirect to the service page or show success message
@@ -285,7 +291,7 @@ const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
                         type="number"
                         placeholder="0"
                         {...field}
-                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        onChange={(e) => field.onChange(e.target.value)}
                       />
                     </FormControl>
                     <FormMessage />

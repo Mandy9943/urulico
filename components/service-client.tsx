@@ -32,7 +32,7 @@ interface ServicioRelacionado {
   id: string;
   titulo: string;
   descripcion: string | null;
-  precio: string | null;
+  precio: number | null;
   moneda: string | null;
   imagen: string | null;
   tieneImagenes: boolean;
@@ -148,7 +148,7 @@ export default function ServiceClient({
               </div>
               {servicio.precio && (
                 <div className="text-2xl font-bold text-green-400">
-                  {parseInt(servicio.precio).toLocaleString()} {servicio.moneda}
+                  {servicio.precio.toLocaleString()} {servicio.moneda}
                 </div>
               )}
             </div>
@@ -237,8 +237,7 @@ export default function ServiceClient({
                   </p>
                   {servicio.precio && (
                     <div className="text-lg font-semibold text-green-400">
-                      {parseInt(servicio.precio).toLocaleString()}{" "}
-                      {servicio.moneda}
+                      {servicio.precio.toLocaleString()} {servicio.moneda}
                     </div>
                   )}
                 </div>

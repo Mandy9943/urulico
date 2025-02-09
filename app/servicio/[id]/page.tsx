@@ -66,7 +66,11 @@ export default async function ServicePage({
 }: {
   params: { id: string };
 }) {
-  const { servicio, serviciosRelacionados } = await getServicio(params.id);
+  const { servicio, serviciosRelacionados } = await getServicio(
+    (
+      await params
+    ).id
+  );
   return (
     <ServiceClient
       servicio={servicio}

@@ -67,6 +67,32 @@ async function getServicio(id: string) {
   };
 }
 
+// Agregar metadata export para SEO
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { servicio } = await getServicio((await params).id);
+
+  return {
+    title: `${servicio.titulo} | Urulico`,
+    description:
+      servicio.descripcion?.slice(0, 160) ||
+      `Servicio de ${servicio.titulo} en ${servicio.ciudad}, ${servicio.departamento}`,
+    openGraph: {
+      title: `${servicio.titulo} | Urulico`,
+      description:
+        servicio.descripcion?.slice(0, 160) ||
+        `Servicio de ${servicio.titulo} en ${servicio.ciudad}, ${servicio.departamento}`,
+      images: servicio.imagenes[0] ? [servicio.imagenes[0]] : undefined,
+    },
+    alternates: {
+      canonical: `https://urulico.com/servicio/${servicio.id}`,
+    },
+  };
+}
+
 export default async function ServicePage({
   params,
 }: {
@@ -80,6 +106,33 @@ export default async function ServicePage({
 
   return (
     <main className="min-h-screen bg-black text-white">
+      {/* Agregar schema.org markup */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            name: servicio.titulo,
+            description: servicio.descripcion,
+            provider: {
+              "@type": "Organization",
+              name: servicio.proveedor,
+              email: servicio.email,
+              telephone: servicio.telefonoPrincipal,
+              areaServed: `${servicio.ciudad}, ${servicio.departamento}`,
+            },
+            ...(servicio.precio && {
+              offers: {
+                "@type": "Offer",
+                price: servicio.precio,
+                priceCurrency: servicio.moneda,
+              },
+            }),
+          }),
+        }}
+      />
+
       <ServiceHeader />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

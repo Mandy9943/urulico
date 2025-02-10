@@ -1,0 +1,21 @@
+{
+  "name": "Urulico - Plataforma de anuncios y servicios en Uruguay",
+  "short_name": "Urulico",
+  "description": "La plataforma líder en Uruguay para anuncios y servicios",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#8B5CF6",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

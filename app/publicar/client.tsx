@@ -27,6 +27,7 @@ import { useUploadThing } from "@/utils/uploadthing";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category } from "@prisma/client";
 import { ArrowLeft, Home, Upload, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -206,7 +207,9 @@ const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
                 {imagenesPreview.map((preview, index) => (
                   <Card key={index} className="relative group">
                     <CardContent className="p-0">
-                      <img
+                      <Image
+                        width={100}
+                        height={100}
                         src={preview}
                         alt={`Preview ${index + 1}`}
                         className="w-full h-32 object-cover rounded-lg"

@@ -1,5 +1,6 @@
 "use server";
 
+import { searchClient } from "@/lib/algolia";
 import prisma from "@/lib/prisma";
 import { z } from "zod";
 
@@ -65,8 +66,17 @@ export async function createService(
           },
         },
       },
+      include: {
+        category: true,
+        user: true,
+      },
     });
-    console.log(service);
+
+    // Index the new service in Algolia
+    await searchClient.saveObject({
+      indexName: "services_index",
+      body: service,
+    });
 
     return { success: true, data: service };
   } catch (error) {

@@ -15,29 +15,100 @@ import { useCallback } from "react";
 
 // Constants
 const departamentos = [
-  "Montevideo",
+  "Artigas",
   "Canelones",
-  "Maldonado",
+  "Cerro Largo",
   "Colonia",
-  "San José",
+  "Durazno",
+  "Flores",
+  "Florida",
+  "Lavalleja",
+  "Maldonado",
+  "Montevideo",
   "Paysandú",
-  "Salto",
+  "Río Negro",
   "Rivera",
-  "Tacuarembó",
   "Rocha",
+  "Salto",
+  "San José",
+  "Soriano",
+  "Tacuarembó",
+  "Treinta y Tres",
 ];
 
 const ciudades = {
+  Artigas: ["Artigas", "Bella Unión", "Tomás Gomensoro", "Baltasar Brum"],
+  Canelones: [
+    "Canelones",
+    "Ciudad de la Costa",
+    "Las Piedras",
+    "Pando",
+    "La Paz",
+    "Santa Lucía",
+    "Progreso",
+    "Sauce",
+    "Toledo",
+    "Atlántida",
+    "San Ramón",
+  ],
+  "Cerro Largo": ["Melo", "Río Branco", "Fraile Muerto", "Isidoro Noblía"],
+  Colonia: [
+    "Colonia del Sacramento",
+    "Carmelo",
+    "Juan Lacaze",
+    "Nueva Helvecia",
+    "Rosario",
+    "Nueva Palmira",
+    "Tarariras",
+  ],
+  Durazno: ["Durazno", "Sarandí del Yí", "Carmen", "La Paloma"],
+  Flores: ["Trinidad", "Ismael Cortinas"],
+  Florida: ["Florida", "Sarandí Grande", "Casupá", "Fray Marcos"],
+  Lavalleja: ["Minas", "José Pedro Varela", "Solís de Mataojo", "Mariscala"],
+  Maldonado: [
+    "Maldonado",
+    "Punta del Este",
+    "San Carlos",
+    "Pan de Azúcar",
+    "Piriápolis",
+    "Aiguá",
+  ],
   Montevideo: [
     "Centro",
-    "Pocitos",
+    "Ciudad Vieja",
     "Cordón",
+    "Pocitos",
     "Punta Carretas",
-    "Malvín",
     "Carrasco",
+    "Malvín",
+    "Buceo",
+    "Parque Rodó",
+    "Prado",
+    "La Blanqueada",
+    "Tres Cruces",
+    "Palermo",
+    "Barrio Sur",
+    "Aguada",
+    "La Comercial",
+    "Villa Española",
+    "Unión",
+    "Maroñas",
+    "Cerrito",
   ],
-  Canelones: ["Las Piedras", "Ciudad de la Costa", "Pando", "La Paz"],
-  Maldonado: ["Punta del Este", "Maldonado", "San Carlos"],
+  Paysandú: ["Paysandú", "Guichón", "Quebracho", "Tambores"],
+  "Río Negro": ["Fray Bentos", "Young", "Nuevo Berlín", "San Javier"],
+  Rivera: ["Rivera", "Tranqueras", "Vichadero", "Minas de Corrales"],
+  Rocha: ["Rocha", "Chuy", "Castillos", "Lascano", "La Paloma", "La Pedrera"],
+  Salto: ["Salto", "Constitución", "Belén", "San Antonio"],
+  "San José": [
+    "San José de Mayo",
+    "Ciudad del Plata",
+    "Libertad",
+    "Ecilda Paullier",
+  ],
+  Soriano: ["Mercedes", "Dolores", "Cardona", "José Enrique Rodó"],
+  Tacuarembó: ["Tacuarembó", "Paso de los Toros", "San Gregorio de Polanco"],
+  "Treinta y Tres": ["Treinta y Tres", "Vergara", "Santa Clara de Olimar"],
 };
 
 export default function ServiceFilters() {
@@ -68,6 +139,7 @@ export default function ServiceFilters() {
           newSearchParams.delete(key);
         }
       });
+      console.log(newSearchParams.toString());
 
       router.push(`/categoria/${categoria}?${newSearchParams.toString()}`);
     },
@@ -89,6 +161,8 @@ export default function ServiceFilters() {
 
     // Limpiar ciudad cuando cambia el departamento
     newSearchParams.delete("ciudad");
+
+    console.log(newSearchParams.toString());
 
     router.push(`/categoria/${categoria}?${newSearchParams.toString()}`);
   };

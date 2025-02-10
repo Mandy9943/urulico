@@ -1,46 +1,36 @@
-import ServiceCard from "@/app/(Home)/components/ServiceCard";
-import { Service } from "../types";
+import ServiceHeader from "@/components/service-header";
+import { Suspense } from "react";
 import CategoryHeader from "./CategoryHeader";
-import Pagination from "./Pagination";
+import ServicesList from "./ServicesList";
 
 interface Props {
   categoria: string;
-  initialData: {
-    services: Service[];
-    total: number;
-  };
-  searchParams: Record<string, string>;
+  searchParams: Promise<Record<string, string>>;
 }
 
-const ITEMS_PER_PAGE = 12;
-
-export default function CategoryPage({
-  categoria,
-  initialData,
-  searchParams,
-}: Props) {
-  const currentPage = Number(searchParams.page) || 1;
-  const totalPages = Math.ceil(initialData.total / ITEMS_PER_PAGE);
-
+export default function CategoryPage({ categoria, searchParams }: Props) {
   return (
     <main className="min-h-screen bg-black text-white">
+      <ServiceHeader />
       <CategoryHeader categoria={categoria} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {initialData.services.map((service) => (
-            <ServiceCard key={service.id} {...service} />
-          ))}
-        </div>
-
-        {totalPages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            searchParams={searchParams}
-          />
-        )}
-      </div>
+      <Suspense
+        fallback={
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+              <div className="animate-pulse h-72 bg-gray-800 rounded-md"></div>
+            </div>
+          </div>
+        }
+      >
+        <ServicesList categoria={categoria} searchParams={searchParams} />
+      </Suspense>
     </main>
   );
 }

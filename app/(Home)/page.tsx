@@ -21,80 +21,8 @@ import SearchBar from "./components/SearchBar";
 
 // Metadatos para SEO
 export const metadata = {
-  title: "Urulico - Plataforma de anuncios y servicios en Uruguay",
-  description:
-    "La plataforma líder en Uruguay para anuncios y servicios. Publica y encuentra lo que necesitas de manera rápida y sencilla.",
-  keywords: [
-    "Uruguay",
-    "anuncios",
-    "servicios",
-    "publicidad",
-    "plataforma digital",
-  ],
-
-  // Configuración de íconos
-  icons: {
-    icon: [
-      { url: "/favicon.ico", type: "image/x-icon" },
-      { url: "/logo-16.png", sizes: "16x16", type: "image/png" },
-      { url: "/logo-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/logo-64.png", sizes: "64x64", type: "image/png" },
-    ],
-    shortcut: "/logo-196.png",
-    apple: [{ url: "/logo-180.png", sizes: "180x180", type: "image/png" }],
-    other: [{ rel: "apple-touch-icon-precomposed", url: "/logo-180.png" }],
-  },
-
-  // Configuración de manifest para PWA
-  manifest: "/manifest.json",
-
-  // Open Graph mejorado con imágenes
-  openGraph: {
-    title: "Urulico - Plataforma de anuncios y servicios en Uruguay",
-    description:
-      "La plataforma líder en Uruguay para anuncios y servicios. Publica y encuentra lo que necesitas de manera rápida y sencilla.",
-    url: "https://urulico.com/",
-    siteName: "Urulico",
-    locale: "es_UY",
-    type: "website",
-    images: [
-      {
-        url: "/logo-512.png",
-        width: 512,
-        height: 512,
-        alt: "Logo de Urulico",
-      },
-      {
-        url: "/preview.png",
-        width: 1200,
-        height: 630,
-        alt: "Vista previa de Urulico",
-      },
-    ],
-  },
-
-  // Twitter Cards mejorado
-  twitter: {
-    card: "summary_large_image",
-    title: "Urulico - Plataforma de anuncios y servicios en Uruguay",
-    description:
-      "La plataforma líder en Uruguay para anuncios y servicios. Publica y encuentra lo que necesitas de manera rápida y sencilla.",
-    images: ["/preview.png"],
-    creator: "@urulico",
-  },
-
-  // URL canónica
   alternates: {
     canonical: "https://urulico.com/",
-  },
-
-  // Configuración de la aplicación web
-  applicationName: "Urulico",
-  appleWebApp: {
-    capable: true,
-    title: "Urulico",
-    statusBarStyle: "default",
-    startupImage: ["/logo-512.png"],
   },
 };
 

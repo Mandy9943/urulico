@@ -18,6 +18,7 @@ interface ServiceCardProps {
   ciudad: string | null;
   telefonoPrincipal: string | null;
   whatsapp: boolean;
+  email: string | null;
   imagen: string | null;
   tieneImagenes: boolean;
 }
@@ -32,6 +33,7 @@ export default function ServiceCard({
   ciudad,
   telefonoPrincipal,
   whatsapp,
+  email,
   imagen,
   tieneImagenes,
 }: ServiceCardProps) {
@@ -89,6 +91,19 @@ export default function ServiceCard({
               className="w-full inline-flex items-center justify-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-white text-sm"
             >
               Contactar por WhatsApp
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {!whatsapp && email && (
+        <div className="p-3 pt-0">
+          <div className="pt-3 border-t border-gray-800">
+            <Link
+              href={`mailto:${email}`}
+              className="w-full inline-flex items-center justify-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-700 rounded-lg transition-colors text-white text-sm"
+            >
+              Contactar por Email
             </Link>
           </div>
         </div>

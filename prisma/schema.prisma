@@ -42,7 +42,7 @@ model Service {
   telefonoSecundario String?
   whatsapp           Boolean  @default(false)
   email              String
-  contactoPor        String   @default("email")
+  contactoPor        String
   imagenes           String[]
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt

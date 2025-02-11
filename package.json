@@ -8,6 +8,7 @@
     "postbuild": "npx tsx generate-seo-files.ts",
     "start": "next start",
     "lint": "next lint",
+    "db:reset": "npx prisma migrate reset --skip-seed && npx prisma db push",
     "db:seed": "npx tsx prisma/seed.ts",
     "postinstall": "prisma generate"
   },
@@ -18,6 +19,7 @@
     "@algolia/autocomplete-js": "^1.18.0",
     "@algolia/autocomplete-theme-classic": "^1.18.0",
     "@algolia/client-search": "^5.20.1",
+    "@anthropic-ai/sdk": "^0.36.3",
     "@hookform/resolvers": "^3.3.4",
     "@libsql/client": "^0.8.1",
     "@prisma/adapter-libsql": "^6.3.1",

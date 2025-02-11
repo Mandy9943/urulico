@@ -135,44 +135,44 @@ async function main() {
     return acc;
   }, {} as Record<string, string>);
 
-  // Crear 30 servicios
-  for (let i = 0; i < 30; i++) {
-    // Seleccionar una categoría aleatoria
-    const categoriaSlug =
-      categorias[Math.floor(Math.random() * categorias.length)].slug;
-    const departamento =
-      departamentos[Math.floor(Math.random() * departamentos.length)];
-    const ciudadesDisponibles = ciudades[departamento as keyof typeof ciudades];
-    const ciudad =
-      ciudadesDisponibles[
-        Math.floor(Math.random() * ciudadesDisponibles.length)
-      ];
+  // // Crear 30 servicios
+  // for (let i = 0; i < 30; i++) {
+  //   // Seleccionar una categoría aleatoria
+  //   const categoriaSlug =
+  //     categorias[Math.floor(Math.random() * categorias.length)].slug;
+  //   const departamento =
+  //     departamentos[Math.floor(Math.random() * departamentos.length)];
+  //   const ciudadesDisponibles = ciudades[departamento as keyof typeof ciudades];
+  //   const ciudad =
+  //     ciudadesDisponibles[
+  //       Math.floor(Math.random() * ciudadesDisponibles.length)
+  //     ];
 
-    // Crear servicio
-    await prisma.service.create({
-      data: {
-        userId: user.id,
-        categoryId: categoriasMap[categoriaSlug],
-        titulo: `Servicio de ${
-          categorias.find((c) => c.slug === categoriaSlug)?.name
-        } ${i + 1}`,
-        descripcion: `Descripción detallada del servicio ${
-          i + 1
-        }. Ofrecemos atención personalizada y garantía en nuestro trabajo.`,
-        precio: Math.floor(Math.random() * 5000) + 500,
-        moneda: Math.random() > 0.2 ? "UYU" : "USD",
-        departamento,
-        ciudad,
-        proveedor: `Proveedor ${i + 1}`,
-        telefonoPrincipal: `098${Math.floor(Math.random() * 1000000)
-          .toString()
-          .padStart(6, "0")}`,
-        whatsapp: Math.random() > 0.3,
-        email: `proveedor${i + 1}@example.com`,
-        imagenes: Math.random() > 0.3 ? [imagenes[i % imagenes.length]] : [],
-      },
-    });
-  }
+  //   // Crear servicio
+  //   await prisma.service.create({
+  //     data: {
+  //       userId: user.id,
+  //       categoryId: categoriasMap[categoriaSlug],
+  //       titulo: `Servicio de ${
+  //         categorias.find((c) => c.slug === categoriaSlug)?.name
+  //       } ${i + 1}`,
+  //       descripcion: `Descripción detallada del servicio ${
+  //         i + 1
+  //       }. Ofrecemos atención personalizada y garantía en nuestro trabajo.`,
+  //       precio: Math.floor(Math.random() * 5000) + 500,
+  //       moneda: Math.random() > 0.2 ? "UYU" : "USD",
+  //       departamento,
+  //       ciudad,
+  //       proveedor: `Proveedor ${i + 1}`,
+  //       telefonoPrincipal: `098${Math.floor(Math.random() * 1000000)
+  //         .toString()
+  //         .padStart(6, "0")}`,
+  //       whatsapp: Math.random() > 0.3,
+  //       email: `proveedor${i + 1}@example.com`,
+  //       imagenes: Math.random() > 0.3 ? [imagenes[i % imagenes.length]] : [],
+  //     },
+  //   });
+  // }
 }
 
 main()

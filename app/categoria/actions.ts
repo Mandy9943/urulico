@@ -60,6 +60,7 @@ export async function getServices(searchParams: string) {
           telefonoPrincipal: true,
           whatsapp: true,
           imagenes: true,
+          email: true,
         },
       }),
       prisma.service.count({

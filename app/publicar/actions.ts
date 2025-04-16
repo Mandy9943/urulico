@@ -32,6 +32,9 @@ export async function createService(
   formData: z.infer<typeof formSchema>,
   imageUrls: string[]
 ) {
+  console.log(formData);
+  console.log(imageUrls);
+
   try {
     const validatedFields = formSchema.parse(formData);
 
@@ -44,6 +47,11 @@ export async function createService(
     const { categoria, ...serviceData } = validatedFields;
 
     // For now, we'll use a hardcoded userId since we don't have auth yet
+
+    console.log(serviceData);
+    console.log(categoria);
+    console.log(contactoPor);
+    console.log(imageUrls);
 
     const service = await prisma.service.create({
       data: {
@@ -73,10 +81,14 @@ export async function createService(
     });
 
     // Index the new service in Algolia
-    await searchClient.saveObject({
-      indexName: "services_index",
-      body: service,
-    });
+    searchClient
+      .saveObject({
+        indexName: "services_index",
+        body: service,
+      })
+      .catch((error) => {
+        console.error("Error indexing service in Algolia:", error);
+      });
 
     return { success: true, data: service };
   } catch (error) {

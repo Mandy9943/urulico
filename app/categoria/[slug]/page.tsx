@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import CategoryPage from "../components/CategoryPage";
 
 interface Props {
@@ -14,14 +13,7 @@ interface Props {
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  try {
-    return (
-      <CategoryPage
-        categoria={(await params).slug}
-        searchParams={searchParams}
-      />
-    );
-  } catch (error) {
-    notFound();
-  }
+  return (
+    <CategoryPage categoria={(await params).slug} searchParams={searchParams} />
+  );
 }

@@ -77,6 +77,8 @@ const formSchema = z.object({
 const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
   const [imagenes, setImagenes] = useState<File[]>([]);
   const [imagenesPreview, setImagenesPreview] = useState<string[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [selectedDepartamento, setSelectedDepartamento] = useState<string>("");
   const router = useRouter();
   const { startUpload } = useUploadThing("serviceImage");
@@ -89,40 +91,55 @@ const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
     },
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     if (files.length + imagenes.length > 10) {
       alert("Solo puedes subir hasta 10 imágenes");
       return;
     }
 
+    // Create object URLs for previews
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setImagenesPreview([...imagenesPreview, ...newPreviews]);
+
+    // Store files in state
     const newImagenes = [...imagenes, ...files];
     setImagenes(newImagenes);
 
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
-    setImagenesPreview([...imagenesPreview, ...newPreviews]);
+    // Start upload immediately
+    setIsUploading(true);
+    try {
+      const uploadResult = await startUpload(files);
+      if (uploadResult) {
+        const urls = uploadResult.map((result) => result.url);
+        setImageUrls([...imageUrls, ...urls]);
+      }
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      alert("Error al subir imágenes. Inténtalo de nuevo.");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const removeImage = (index: number) => {
+    // Remove the image from all states
     const newImagenes = imagenes.filter((_, i) => i !== index);
     const newPreviews = imagenesPreview.filter((_, i) => i !== index);
+    const newUrls = imageUrls.filter((_, i) => i !== index);
+
     setImagenes(newImagenes);
     setImagenesPreview(newPreviews);
+    setImageUrls(newUrls);
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // First, upload images
-      let imageUrls: string[] = [];
-      if (imagenes.length > 0) {
-        const uploadResult = await startUpload(imagenes);
-        if (!uploadResult) {
-          throw new Error("Failed to upload images");
-        }
-        imageUrls = uploadResult.map((result) => result.url);
-      }
+      // Use the already uploaded image URLs
+      // No need to upload again
+      console.log(imageUrls);
 
-      // Then create service
+      // Create service with the pre-uploaded images
       const result = await createService(
         {
           ...values,
@@ -221,22 +238,34 @@ const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
                       >
                         <X className="h-4 w-4" />
                       </button>
+                      {index >= imageUrls.length && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                          <span className="text-xs">Subiendo...</span>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
                 {imagenes.length < 10 && (
                   <Card className="relative">
                     <CardContent className="p-0">
-                      <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer hover:border-violet-500 transition-colors">
+                      <label
+                        className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-700 rounded-lg cursor-pointer hover:border-violet-500 transition-colors ${
+                          isUploading ? "opacity-50 pointer-events-none" : ""
+                        }`}
+                      >
                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                           <Upload className="h-6 w-6 mb-2 text-gray-400" />
-                          <p className="text-sm text-gray-400">Subir imagen</p>
+                          <p className="text-sm text-gray-400">
+                            {isUploading ? "Subiendo..." : "Subir imagen"}
+                          </p>
                         </div>
                         <input
                           type="file"
                           className="hidden"
                           accept="image/*"
                           onChange={handleImageUpload}
+                          disabled={isUploading}
                         />
                       </label>
                     </CardContent>
@@ -533,7 +562,7 @@ const PublicarClientSide = ({ categories }: { categories: Category[] }) => {
               />
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={isUploading}>
               Publicar anuncio
             </Button>
           </form>

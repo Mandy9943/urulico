@@ -3,7 +3,7 @@ import ServiceHeader from "@/components/service-header";
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import { NO_IMAGE } from "@/utils/const";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Info, Mail, MapPin, Phone, Tag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -103,6 +103,7 @@ export default async function ServicePage({
       await params
     ).id
   );
+  console.log(servicio);
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -137,42 +138,98 @@ export default async function ServicePage({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <ServiceGallery images={servicio.imagenes} title={servicio.titulo} />
+          <div className="space-y-6 lg:order-1">
+            <ServiceGallery
+              images={servicio.imagenes}
+              title={servicio.titulo}
+            />
+          </div>
 
-          <div className="space-y-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-4">{servicio.titulo}</h1>
+          {/* Service details */}
+          <div className="space-y-6 lg:order-2">
+            {/* Service title, location and price */}
+            <div className="pb-4 border-b border-gray-800">
+              <h1 className="text-3xl font-bold mb-3">{servicio.titulo}</h1>
               <div className="flex items-center gap-2 text-gray-400 mb-4">
                 <MapPin className="w-4 h-4" />
                 <span>
-                  {servicio.ciudad}, {servicio.departamento}
+                  {servicio.ciudad && servicio.departamento
+                    ? `${servicio.ciudad}, ${servicio.departamento}`
+                    : servicio.ciudad || servicio.departamento || ""}
                 </span>
               </div>
               {servicio.precio && (
-                <div className="text-2xl font-bold text-green-400">
-                  {servicio.precio.toLocaleString()} {servicio.moneda}
+                <div className="flex items-center gap-2">
+                  <Tag className="w-5 h-5 text-green-400" />
+                  <span className="text-2xl font-bold text-green-400">
+                    {servicio.precio.toLocaleString()} {servicio.moneda}
+                  </span>
                 </div>
               )}
             </div>
 
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Descripción</h2>
-              <p className="text-gray-400 whitespace-pre-line">
-                {servicio.descripcion}
+            {/* Description section */}
+            <div className="p-4 bg-gray-900/40 rounded-lg border border-gray-800">
+              <div className="flex items-center gap-2 mb-3">
+                <Info className="w-5 h-5 text-gray-400" />
+                <h2 className="text-xl font-semibold">Descripción</h2>
+              </div>
+              <p className="text-gray-300 whitespace-pre-line pl-7">
+                {servicio.descripcion || "No hay descripción disponible."}
               </p>
             </div>
 
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Proveedor</h2>
-              <p className="text-lg">{servicio.proveedor}</p>
+            {/* Provider section */}
+            <div className="p-4 bg-gray-900/40 rounded-lg border border-gray-800">
+              <div className="flex items-center gap-2 mb-3">
+                <User className="w-5 h-5 text-gray-400" />
+                <h2 className="text-xl font-semibold">Nombre</h2>
+              </div>
+              <p className="text-lg pl-7">{servicio.proveedor}</p>
+            </div>
+          </div>
+
+          {/* Contact section - moved to the bottom on mobile */}
+          <div className="pt-6 order-3 lg:col-span-1">
+            <h2 className="text-xl font-semibold mb-6 border-b border-gray-800 pb-2">
+              Contacto
+            </h2>
+
+            {/* Display contact info for copying */}
+            <div className="space-y-4 mb-6 pl-2">
+              {(servicio.contactoPor === "llamada-whatsapp" ||
+                servicio.contactoPor === "todos" ||
+                !servicio.contactoPor) &&
+                servicio.telefonoPrincipal && (
+                  <div className="flex items-center gap-3">
+                    <Phone className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-300 select-all text-lg">
+                      {servicio.telefonoPrincipal}
+                    </span>
+                  </div>
+                )}
+              {(servicio.contactoPor === "email" ||
+                servicio.contactoPor === "todos" ||
+                !servicio.contactoPor) &&
+                servicio.email && (
+                  <div className="flex items-center gap-3">
+                    <Mail className="w-5 h-5 text-gray-400" />
+                    <span className="text-gray-300 select-all text-lg">
+                      {servicio.email}
+                    </span>
+                  </div>
+                )}
             </div>
 
-            <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Contacto</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {servicio.whatsapp && servicio.telefonoPrincipal && (
+            {/* Action buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+              {(servicio.contactoPor === "llamada-whatsapp" ||
+                servicio.contactoPor === "todos" ||
+                !servicio.contactoPor) &&
+                servicio.whatsapp &&
+                servicio.telefonoPrincipal && (
                   <Button
-                    className="w-full bg-green-600 hover:bg-green-700"
+                    className="w-full bg-green-600 hover:bg-green-700 shadow-md"
                     asChild
                   >
                     <Link
@@ -186,8 +243,15 @@ export default async function ServicePage({
                     </Link>
                   </Button>
                 )}
-                {servicio.telefonoPrincipal && (
-                  <Button variant="outline" className="w-full" asChild>
+              {(servicio.contactoPor === "llamada-whatsapp" ||
+                servicio.contactoPor === "todos" ||
+                !servicio.contactoPor) &&
+                servicio.telefonoPrincipal && (
+                  <Button
+                    variant="outline"
+                    className="w-full border-gray-700 hover:bg-gray-800 shadow-md"
+                    asChild
+                  >
                     <Link
                       href={`tel:${servicio.telefonoPrincipal.replace(
                         /\s+/g,
@@ -199,57 +263,68 @@ export default async function ServicePage({
                     </Link>
                   </Button>
                 )}
-                <Button
-                  variant="outline"
-                  className="w-full sm:col-span-2"
-                  asChild
-                >
-                  <Link href={`mailto:${servicio.email}`}>
-                    <Mail className="w-4 h-4 mr-2" />
-                    Enviar email
-                  </Link>
-                </Button>
-              </div>
+              {(servicio.contactoPor === "email" ||
+                servicio.contactoPor === "todos" ||
+                !servicio.contactoPor) &&
+                servicio.email && (
+                  <Button
+                    variant="outline"
+                    className={`w-full ${
+                      servicio.contactoPor === "email" ? "sm:col-span-2" : ""
+                    } border-gray-700 hover:bg-gray-800 shadow-md`}
+                    asChild
+                  >
+                    <Link href={`mailto:${servicio.email}`}>
+                      <Mail className="w-4 h-4 mr-2" />
+                      Enviar email
+                    </Link>
+                  </Button>
+                )}
             </div>
           </div>
         </div>
 
-        {/* Servicios relacionados */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-8">Servicios relacionados</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {serviciosRelacionados.map((servicio) => (
-              <Link
-                key={servicio.id}
-                href={`/servicio/${servicio.id}`}
-                className="bg-gray-900/50 rounded-xl border border-gray-800 overflow-hidden hover:border-violet-500 transition-colors"
-              >
-                <div className="aspect-square relative">
-                  <Image
-                    src={servicio.imagen || NO_IMAGE}
-                    alt={servicio.titulo}
-                    width={400}
-                    height={300}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold mb-2 line-clamp-2">
-                    {servicio.titulo}
-                  </h3>
-                  <p className="text-gray-400 text-sm mb-3 line-clamp-2">
-                    {servicio.descripcion}
-                  </p>
-                  {servicio.precio && (
-                    <div className="text-lg font-semibold text-green-400">
-                      {servicio.precio.toLocaleString()} {servicio.moneda}
-                    </div>
-                  )}
-                </div>
-              </Link>
-            ))}
+        {/* Servicios relacionados - only show if there are related services */}
+        {serviciosRelacionados.length > 0 && (
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-2">
+              <span className="h-1 w-6 bg-violet-500 rounded-full"></span>
+              Servicios relacionados
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {serviciosRelacionados.map((servicio) => (
+                <Link
+                  key={servicio.id}
+                  href={`/servicio/${servicio.id}`}
+                  className="bg-gray-900/50 rounded-xl border border-gray-800 overflow-hidden hover:border-violet-500 transition-all hover:shadow-md hover:shadow-violet-900/20 hover:-translate-y-1"
+                >
+                  <div className="aspect-square relative">
+                    <Image
+                      src={servicio.imagen || NO_IMAGE}
+                      alt={servicio.titulo}
+                      width={400}
+                      height={300}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold mb-2 line-clamp-2">
+                      {servicio.titulo}
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                      {servicio.descripcion}
+                    </p>
+                    {servicio.precio && (
+                      <div className="text-lg font-semibold text-green-400">
+                        {servicio.precio.toLocaleString()} {servicio.moneda}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </main>
   );

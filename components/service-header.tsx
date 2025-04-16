@@ -50,7 +50,7 @@ export default function ServiceHeader({
               type="submit"
               variant="ghost"
               size="sm"
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-2 hover:bg-gray-800/50"
+              className="hidden md:block absolute right-1.5 top-1/2 -translate-y-1/2 h-8 px-2 hover:bg-gray-800/50"
             >
               Buscar
             </Button>

@@ -14,10 +14,14 @@ import {
   Wrench,
 } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import CategoriesGrid from "./components/CategoriesGrid";
+import CategoriesGridSkeleton from "./components/CategoriesGridSkeleton";
 import CTASection from "./components/CTASection";
+import RecentServicesGrid from "./components/RecentServicesGrid";
+import RecentServicesGridSkeleton from "./components/RecentServicesGridSkeleton";
 import SearchBar from "./components/SearchBar";
+import SearchBarSkeleton from "./components/SearchBarSkeleton";
 
 // Metadatos para SEO
 export const metadata = {
@@ -77,8 +81,25 @@ async function getCategories(): Promise<TransformedCategory[]> {
   }));
 }
 
+// Add function to fetch recent services
+async function getRecentServices() {
+  const services = await prisma.service.findMany({
+    take: 6, // Fetch the latest 6 services
+    orderBy: {
+      createdAt: "desc", // Order by creation date, newest first
+    },
+    include: {
+      category: true, // Include category information
+      // Add other necessary relations if needed, e.g., user, images
+    },
+  });
+  return services;
+}
+
 export default async function LandingPage() {
-  const categories = await getCategories();
+  // Note: Data fetching remains here for Server Components
+  const categoriesPromise = getCategories();
+  const recentServicesPromise = getRecentServices();
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -94,12 +115,24 @@ export default async function LandingPage() {
               Tu plataforma de anuncios y servicios en Uruguay. Publica y
               encuentra servicios de manera rápida y sencilla.
             </p>
-            <SearchBar categories={categories} />
+            <Suspense fallback={<SearchBarSkeleton />}>
+              <SearchBar categories={await categoriesPromise} />
+            </Suspense>
           </div>
         </div>
       </div>
 
-      <CategoriesGrid categories={categories} />
+      {/* Categories Section with Suspense */}
+      <Suspense fallback={<CategoriesGridSkeleton />}>
+        <CategoriesGrid categories={await categoriesPromise} />
+      </Suspense>
+
+      {/* Recent Services Section with Suspense */}
+      <Suspense fallback={<RecentServicesGridSkeleton />}>
+        <RecentServicesGrid services={await recentServicesPromise} />
+      </Suspense>
+
+      {/* CTA Section - Assuming it doesn't need data or is static */}
       <CTASection />
     </main>
   );
